@@ -108,6 +108,9 @@ if arch == 'skip':
     logging.info('nothing to build on this arch')
     sys.exit(0)
 
+logging.info('terminating early for debug')
+sys.exit(0)
+
 if 'nobuild' in package.tokens:
     logging.info('not building due to nobuild')
     sys.exit(0)
