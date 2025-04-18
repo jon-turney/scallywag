@@ -12,6 +12,16 @@ source /etc/profile
 # restore cwd after /etc/profile sets it to $HOME
 cd - >/dev/null
 
+env | sort
+
+which perl
+perl -v ; echo $?
+
+cygcheck perl
+ldd /usr/bin/perl
+
+strace perl -v
+
 # run required cygport subcommands:
 #
 # 'download'; then 'srcpackage' (if we're making a source package); otherwise
