@@ -3,6 +3,8 @@
 # SCRIPT names the build script to invoke
 SCRIPT="$1"
 shift
+MODE="${1:+--debug}"
+shift
 SUBCOMMANDS="$@"
 
 # installed packages may have added files to /etc/profile.d/, so re-read profile
@@ -17,5 +19,5 @@ cd - >/dev/null
 # token is present)
 for s in ${SUBCOMMANDS}
 do
-    cygport ${SCRIPT} ${s} || exit 1
+    cygport ${MODE} ${SCRIPT} ${s} || exit 1
 done
