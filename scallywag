@@ -170,7 +170,8 @@ if package.kind == 'cygport':
             subcommands.append('srcpackage')
 
     logging.info("running 'cygport %s'" % (' '.join(subcommands)))
-    rc = subprocess.call([os.path.join(mydir, 'build.sh'), package.script] +
+    rc = subprocess.call([os.path.join(mydir, 'build.sh'), package.script,
+                          'debug' if 'debug' in package.tokens else ''] +
                          subcommands, stdin=subprocess.DEVNULL)
 
     # publish contents of dist as artifacts
