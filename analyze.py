@@ -46,6 +46,7 @@ class PackageKind:
 
 
 var_list = [
+    'NAME',
     'ARCHES',
     'BUILD_REQUIRES',
     'CROSS_HOST',
@@ -209,9 +210,13 @@ def analyze(repodir, default_tokens):
 
         # detect if there is an ARCH line
         arches = get_var('ARCHES')
-        if arches == 'all':
-            arches = 'x86_64'
-        arches = arches.split()
+        if arches != 'all':
+            arches = arches.split()
+        else:
+            if aarch64_whitelist(get_var('NAME')):
+                arches = ['x86_64', 'aarch64']
+            else:
+                arches = ['x86_64']
 
         # some 'inherit's imply ARCH=noarch
         inherited = get_var('INHERITED').split()
@@ -375,6 +380,14 @@ def generalize_python_depends(depends, tokens):
 
             logging.info('generalizing %s to %s' % (atom, gen_atom))
             depends.update(gen_atom)
+
+
+#
+# for the moment, we only try aarch64 builds for ARCHES="any" packages for the
+# specific package on a whitelist
+#
+def aarch64_whitelist(pn):
+    return pn in ['cygwin']
 
 
 #
