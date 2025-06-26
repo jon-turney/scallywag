@@ -127,24 +127,28 @@ if 'nobuild' in package.tokens:
     logging.info('not building due to nobuild')
     sys.exit(0)
 
-setup_exe = subprocess.check_output(['cygpath', os.environ['SETUP']]).strip()
 
 if package.kind == 'cygport':
-    logging.info('installing build dependencies')
+    if 'SETUP' in os.environ:
+        logging.info('installing build dependencies')
 
-    setup_opts = []
-    if 'testpackages' in package.tokens:
-        setup_opts.append('-t')
+        setup_exe = subprocess.check_output(['cygpath', os.environ['SETUP']]).strip()
 
-    subprocess.check_call([setup_exe,
-                           '-q', '-n', '-O'] + setup_opts +
-                          ['-R', os.environ['CYGWIN_ROOT'],
-                           '-s', os.environ['CYGWIN_MIRROR'],
-                           '-l', os.environ['CACHE'],
-                           '-P', ','.join(package.depends)])
+        setup_opts = []
+        if 'testpackages' in package.tokens:
+            setup_opts.append('-t')
 
-    # preserve setup.log.full
-    shutil.move('/var/log/setup.log.full', os.path.join(mydir, 'setup.log.full'))
+        subprocess.check_call([setup_exe,
+                               '-q', '-n', '-O'] + setup_opts +
+                              ['-R', os.environ['CYGWIN_ROOT'],
+                               '-s', os.environ['CYGWIN_MIRROR'],
+                               '-l', os.environ['CACHE'],
+                               '-P', ','.join(package.depends)])
+
+        # preserve setup.log.full
+        shutil.move('/var/log/setup.log.full', os.path.join(mydir, 'setup.log.full'))
+    else:
+        logging.info('not able to install build dependencies when crossbuilding')
 
     # assemble the series of cygoprt subcommands for the build
     subcommands = []

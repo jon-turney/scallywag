@@ -154,6 +154,7 @@ def _github_workflow_trigger(package, maintainer, commit, reference, default_tok
             "COMMIT": commit,
             "REFERENCE": reference,
             "DEFAULT_TOKENS": default_tokens,
+            "native": "cross" not in default_tokens,
         }
     }
 
