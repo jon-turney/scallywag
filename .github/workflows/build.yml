@@ -9,10 +9,16 @@ on:
         required: false
         type: string
         default: x86_64
+    outputs:
+      arches:
+        value: ${{ jobs.build.outputs.arches }}
 
 jobs:
   build:
     runs-on: windows-latest
+
+    outputs:
+      arches: ${{ steps.scallywag.outputs.arches }}
 
     steps:
       - run: git config --global core.autocrlf input
@@ -56,9 +62,12 @@ jobs:
         if: ${{ inputs.name != 'source' }}
 
       - name: Build packages
+        id: scallywag
         run: |
           export PATH=/usr/bin:/usr/local/bin:$(cygpath ${SYSTEMROOT})/system32
           ./scallywag --inputs '${{ toJson(github.event.client_payload) }}'
+          # script sets 'arches' in $GITHUB_OUTPUT
+          cat ${GITHUB_OUTPUT}
         shell: bash --noprofile --norc -o igncr -eo pipefail '{0}'
         env:
           SETUP: ${{ steps.cygwin-install.outputs.setup }}
