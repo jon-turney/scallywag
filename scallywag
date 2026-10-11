@@ -136,9 +136,10 @@ if 'nobuild' in package.tokens:
     logging.info('not building due to nobuild')
     sys.exit(0)
 
+not_cross = 'SETUP' in os.environ
 
 if package.kind == 'cygport':
-    if 'SETUP' in os.environ:
+    if not_cross:
         logging.info('installing build dependencies')
 
         setup_exe = subprocess.check_output(['cygpath', os.environ['SETUP']]).strip()
@@ -179,7 +180,10 @@ if package.kind == 'cygport':
             subcommands.append('all')
 
         if 'notest' not in package.tokens:
-            subcommands.append('test')
+            if not_cross:
+                subcommands.append('test')
+            else:
+                logging.info("skipping tests since cross-compiling")
     else:
         # 'download'; then 'srcpackage' (if we're making a source package)
         subcommands.append('download prep')
