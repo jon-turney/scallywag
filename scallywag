@@ -163,7 +163,7 @@ if package.kind == 'cygport':
         cross_depends = [p for p in package.depends if not p.endswith(':native')]
         logging.info('installing cross-build dependencies: %s', cross_depends)
         try:
-            subprocess.check_call(['cygwin-pkg-tool', 'install'] + cross_depends)
+            subprocess.check_call(['cygwin-pkg-tool', '--arch', arch, 'install'] + cross_depends)
         except (subprocess.CalledProcessError, FileNotFoundError):
             logging.error('cygwin-pkg-tool failed')
 
