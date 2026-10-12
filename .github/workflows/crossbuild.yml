@@ -21,7 +21,7 @@ jobs:
         run: |
           dnf install -y autoconf automake gawk git make patch perl
           dnf install -y dnf-plugins-core
-          dnf copr enable -y @cygwin/cygwin
+          dnf copr enable -y jturney/cygwin3
           dnf install -y cygport cygwin${{ inputs.pkgarch }}-gcc-c++ cocom \
           cygwin${{ inputs.pkgarch }}-gettext cygwin${{ inputs.pkgarch }}-libbfd \
           cygwin${{ inputs.pkgarch }}-libiconv cygwin${{ inputs.pkgarch }}-zlib
